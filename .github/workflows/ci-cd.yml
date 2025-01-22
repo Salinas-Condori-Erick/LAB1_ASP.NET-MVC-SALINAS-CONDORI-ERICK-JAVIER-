@@ -23,21 +23,31 @@ jobs:
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
-      - name: Limpiar carpetas bin y obj
+      # Limpieza de carpetas bin y obj
+      - name: Limpiar carpetas de compilación
         run: |
           find . -type d \( -name "bin" -o -name "obj" \) -exec rm -rf {} +
           echo "Carpetas bin y obj eliminadas correctamente."
 
+      # Limpieza adicional con dotnet clean
+      - name: Limpiar con dotnet clean
+        run: |
+          cd src
+          dotnet clean
+
+      # Restaurar paquetes
       - name: Restaurar los paquetes
         run: |
           cd src
           dotnet restore
 
+      # Ejecutar pruebas y generar cobertura
       - name: Ejecutar pruebas y generar cobertura
         run: |
           cd src
           dotnet test Shorten.Tests --collect:"XPlat Code Coverage" --results-directory:TestResults
 
+      # Generar reporte de cobertura
       - name: Generar reporte de cobertura
         uses: danielpalme/ReportGenerator-GitHub-Action@5.3.7
         with:
