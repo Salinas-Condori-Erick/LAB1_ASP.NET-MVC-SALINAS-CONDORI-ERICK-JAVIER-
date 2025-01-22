@@ -12,54 +12,53 @@ on:
 permissions:
   contents: read
 
+defaults:
+  run:
+    shell: bash  # Usar bash como shell predeterminado
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Configurar .NET Core
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
-      # Verificar e instalar herramientas de shell necesarias
-      - name: Verificar instalación de sh
+      - name: Verificar e instalar herramientas de shell necesarias
         run: |
           sudo apt-get update
           sudo apt-get install --yes dash
-          echo "Shell básico instalado correctamente."
+          sudo ln -sf /bin/dash /bin/sh  # Crear enlace simbólico explícito para sh
+          echo "Shell básico configurado correctamente."
 
-      # Limpiar carpetas bin y obj
       - name: Limpiar carpetas de compilación
         run: |
           find . -type d \( -name "bin" -o -name "obj" \) -exec rm -rf {} +
           echo "Carpetas bin y obj eliminadas correctamente."
 
-      # Limpieza adicional con dotnet clean
       - name: Limpiar con dotnet clean
         run: |
           cd src
           dotnet clean
 
-      # Restaurar paquetes
       - name: Restaurar los paquetes
         run: |
           cd src
           dotnet restore
 
-      # Compilar el proyecto
       - name: Compilar el proyecto
         run: |
           cd src
           dotnet build
 
-      # Instalar Scanner de SonarCloud
       - name: Instalar Scanner de SonarCloud
         run: |
           dotnet tool install --global dotnet-sonarscanner
           echo "$HOME/.dotnet/tools" >> $GITHUB_PATH
-        
+
       - name: Ejecutar escaneo de SonarCloud
         env:
           DOTNET_ROOT: /usr/share/dotnet
@@ -70,7 +69,8 @@ jobs:
             /k:"${{ secrets.SONAR_PROJECT }}" \
             /o:"${{ secrets.SONAR_ORG }}" \
             /d:sonar.login="${{ secrets.SONAR_TOKEN }}" \
-            /d:sonar.host.url="https://sonarcloud.io"
+            /d:sonar.host.url="https://sonarcloud.io" \
+            /d:sonar.scanner.javaExePath="/usr/bin/java"
           dotnet build
           dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
 
@@ -106,5 +106,3 @@ jobs:
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
           package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
           restart: true
-
-          
