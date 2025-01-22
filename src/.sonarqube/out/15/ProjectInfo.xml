@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ProjectInfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.sonarsource.com/msbuild/integration/2015/1">
+  <ProjectName>Shorten.Tests</ProjectName>
+  <ProjectLanguage>C#</ProjectLanguage>
+  <ProjectType>Test</ProjectType>
+  <ProjectGuid>b616e6b0-152c-4313-8c69-ea3bd8a740dc</ProjectGuid>
+  <FullPath>C:\Users\hp\LAB1_ASP.NET-MVC-SALINAS-CONDORI-ERICK-JAVIER-\src\Shorten.Tests\Shorten.Tests.csproj</FullPath>
+  <IsExcluded>false</IsExcluded>
+  <AnalysisResults>
+    <AnalysisResult Id="FilesToAnalyze" Location="C:\Users\hp\LAB1_ASP.NET-MVC-SALINAS-CONDORI-ERICK-JAVIER-\src\.sonarqube\conf\15\FilesToAnalyze.txt" />
+  </AnalysisResults>
+  <AnalysisSettings>
+    <Property Name="sonar.cs.roslyn.reportFilePaths">C:\Users\hp\LAB1_ASP.NET-MVC-SALINAS-CONDORI-ERICK-JAVIER-\src\.sonarqube\out\15\Issues.json</Property>
+    <Property Name="sonar.cs.analyzer.projectOutPaths">C:\Users\hp\LAB1_ASP.NET-MVC-SALINAS-CONDORI-ERICK-JAVIER-\src\.sonarqube\out\15</Property>
+  </AnalysisSettings>
+  <Configuration>Debug</Configuration>
+  <Platform>AnyCPU</Platform>
+  <TargetFramework>net8.0</TargetFramework>
+</ProjectInfo>
