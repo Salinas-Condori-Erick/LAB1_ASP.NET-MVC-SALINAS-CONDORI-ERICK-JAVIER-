@@ -23,6 +23,7 @@ jobs:
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
+      # Instalar y configurar shell sh
       - name: Instalar shell sh
         run: |
           sudo apt-get update
