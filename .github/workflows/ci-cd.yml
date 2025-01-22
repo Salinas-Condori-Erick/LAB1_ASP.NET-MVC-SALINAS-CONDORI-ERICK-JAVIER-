@@ -31,7 +31,7 @@ jobs:
       - name: Limpiar carpetas bin y obj
         run: |
           rm -rf src/bin src/obj
-          echo "Carpetas bin y obj eliminadas."
+          echo "Carpetas bin y obj eliminadas correctamente."
 
       - name: Verificar eliminación de carpetas
         run: |
@@ -79,6 +79,7 @@ jobs:
             /o:"${{ secrets.SONAR_ORG }}" \
             /d:sonar.login="${{ secrets.SONAR_TOKEN }}" \
             /d:sonar.host.url="https://sonarcloud.io"
+          rm -rf bin obj # Limpieza adicional antes de build
           dotnet build
           dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
           
