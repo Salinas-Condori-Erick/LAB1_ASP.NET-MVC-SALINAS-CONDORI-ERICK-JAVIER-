@@ -28,10 +28,9 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
           
-      - name: Limpiar carpetas bin y obj
+      - name: Limpiar carpetas bin y obj manualmente
         run: |
-          if [ -d "src/bin" ]; then rm -rf src/bin; fi
-          if [ -d "src/obj" ]; then rm -rf src/obj; fi
+          rm -rf src/bin src/obj
           echo "Carpetas bin y obj eliminadas correctamente."
 
       - name: Verificar eliminación de carpetas
@@ -80,6 +79,7 @@ jobs:
             /o:"${{ secrets.SONAR_ORG }}" \
             /d:sonar.login="${{ secrets.SONAR_TOKEN }}" \
             /d:sonar.host.url="https://sonarcloud.io"
+          rm -rf bin obj
           dotnet build
           dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
           
