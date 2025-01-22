@@ -1,9 +1,9 @@
 name: Construcción y despliegue de una aplicación ASP.NET MVC a Azure
 
 env:
-  AZURE_WEBAPP_NAME: upt-awa-750          # Aquí va el nombre de su aplicación
+  AZURE_WEBAPP_NAME: upt-awa-XXX          # Aqui va el nombre de su aplicación
   AZURE_WEBAPP_PACKAGE_PATH: '.'          # Es la ruta de destino
-  DOTNET_VERSION: '8'                     # La versión de .NET
+  DOTNET_VERSION: '8'                     # la versión de .NET
 
 on:
   push:
@@ -28,20 +28,11 @@ jobs:
       - name: Restaurar los paquetes
         run: cd src && dotnet restore
       - name: Ejecutar pruebas
-        run: |
-          cd src
-          # Ejecuta pruebas y genera el archivo de cobertura
-          dotnet test --collect:"XPlat Code Coverage" --results-directory:../TestResults
-      - name: Verificar archivos de cobertura
-        run: |
-          # Lista los archivos generados en la carpeta TestResults
-          echo "Listando archivos en TestResults:"
-          ls -R ./src/TestResults || echo "No se encontraron archivos en TestResults"
+        run: cd src && dotnet test --collect:"XPlat Code Coverage"
       - name: ReportGenerator
         uses: danielpalme/ReportGenerator-GitHub-Action@5.3.7
         with:
-          # Cambia la ruta para buscar archivos en TestResults
-          reports: ./TestResults/cobertura.xml
+          reports: ./src/TestResults/coverage.cobertura.xml
           targetdir: coveragereport
           reporttypes: MarkdownSummary;MarkdownAssembliesSummary;MarkdownSummaryGithub
       - name: Upload coverage report artifact
@@ -49,7 +40,7 @@ jobs:
         with:
           name: CoverageReport 
           path: coveragereport 
-      - name: Publish coverage in build summary
+      - name: Publish coverage in build summary # 
         run: cat coveragereport/SummaryGithub.md >> $GITHUB_STEP_SUMMARY 
         shell: bash
       - name: Instalar Scanner
@@ -78,7 +69,7 @@ jobs:
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
 
     steps:
-      - name: Descargar el artefacto desde el job de construcción
+      - name: Descargar el artefacto desde el job de construccion
         uses: actions/download-artifact@v4
         with:
           name: .net-app
