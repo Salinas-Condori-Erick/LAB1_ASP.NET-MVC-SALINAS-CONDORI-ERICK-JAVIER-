@@ -56,7 +56,7 @@ jobs:
       - name: Instalar Scanner de SonarCloud
         run: |
           dotnet tool install --global dotnet-sonarscanner
-          echo "##[add-path]$HOME/.dotnet/tools" # Asegura que el escáner esté en el PATH
+          echo "$HOME/.dotnet/tools" >> $GITHUB_PATH # Añade el PATH correctamente
         
       - name: Ejecutar escaneo de SonarCloud
         env:
