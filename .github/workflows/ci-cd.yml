@@ -1,9 +1,9 @@
 name: Construcción y despliegue de una aplicación ASP.NET MVC a Azure
 
 env:
-  AZURE_WEBAPP_NAME: upt-awa-750
-  AZURE_WEBAPP_PACKAGE_PATH: '.'
-  DOTNET_VERSION: '8'
+  AZURE_WEBAPP_NAME: upt-awa-750          # Nombre de la aplicación
+  AZURE_WEBAPP_PACKAGE_PATH: '.'          # Ruta de destino
+  DOTNET_VERSION: '8'                     # Versión de .NET
 
 on:
   push:
@@ -18,18 +18,20 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       
-      - name: Configurar .NET Core
+      - name: Configurando .NET Core
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
-
-      - name: Verificar si el comando rm está disponible
-        run: which rm || echo "El comando rm no está disponible"
-
-      - name: Limpiar carpetas de compilación usando dotnet clean
+          
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          
+      - name: Limpiar carpetas bin y obj
         run: |
-          cd src
-          dotnet clean
+          find src/ -name "bin" -o -name "obj" | xargs rm -rf
+          echo "Carpetas bin y obj eliminadas."
 
       - name: Restaurar los paquetes
         run: cd src && dotnet restore
@@ -38,7 +40,7 @@ jobs:
         run: |
           cd src
           dotnet test Shorten.Tests --collect:"XPlat Code Coverage" --results-directory:TestResults
-
+          
       - name: Generar reporte de cobertura
         uses: danielpalme/ReportGenerator-GitHub-Action@5.3.7
         with:
@@ -52,10 +54,14 @@ jobs:
           name: CodeCoverageReport 
           path: coveragereport
           
+      - name: Publicar cobertura en el resumen de la ejecución
+        run: cat coveragereport/SummaryGithub.md >> $GITHUB_STEP_SUMMARY
+        shell: bash
+        
       - name: Instalar Scanner de SonarCloud
         run: |
           dotnet tool install --global dotnet-sonarscanner
-          echo "$HOME/.dotnet/tools" >> $GITHUB_PATH
+          echo "$HOME/.dotnet/tools" >> $GITHUB_PATH # Añade el PATH correctamente
         
       - name: Ejecutar escaneo de SonarCloud
         env:
@@ -70,10 +76,10 @@ jobs:
             /d:sonar.host.url="https://sonarcloud.io"
           dotnet build
           dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
-
+          
       - name: Publicar la aplicación localmente
         run: cd src && dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/publish
-
+        
       - name: Subir el artefacto para el job de despliegue
         uses: actions/upload-artifact@v4
         with:
