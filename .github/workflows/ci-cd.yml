@@ -28,13 +28,19 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
           
-      - name: Restaurar los paquetes
-        run: cd src && dotnet restore
-        
       - name: Limpiar carpetas bin y obj
         run: |
           rm -rf src/bin src/obj
+          echo "Carpetas bin y obj eliminadas."
+
+      - name: Verificar eliminación de carpetas
+        run: |
+          ls -la src/
+          ls -la src/obj || echo "Carpeta obj eliminada correctamente."
       
+      - name: Restaurar los paquetes
+        run: cd src && dotnet restore
+        
       - name: Ejecutar pruebas y generar cobertura
         run: |
           cd src
