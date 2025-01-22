@@ -1,7 +1,7 @@
 name: Construcción y despliegue de una aplicación ASP.NET MVC a Azure
 
 env:
-  AZURE_WEBAPP_NAME: upt-awa-XXX          # Aqui va el nombre de su aplicación
+  AZURE_WEBAPP_NAME: upt-awa-750          # Aqui va el nombre de su aplicación
   AZURE_WEBAPP_PACKAGE_PATH: '.'          # Es la ruta de destino
   DOTNET_VERSION: '8'                     # la versión de .NET
 
@@ -27,21 +27,23 @@ jobs:
           java-version: '17'
       - name: Restaurar los paquetes
         run: cd src && dotnet restore
-      - name: Ejecutar pruebas
-        run: cd src && dotnet test --collect:"XPlat Code Coverage"
-      - name: ReportGenerator
+      - name: Ejecutar pruebas y generar cobertura
+        run: |
+          cd src
+          dotnet test Shorten.Tests --collect:"XPlat Code Coverage" --results-directory:TestResults
+      - name: Generar reporte de cobertura
         uses: danielpalme/ReportGenerator-GitHub-Action@5.3.7
         with:
-          reports: ./src/TestResults/coverage.cobertura.xml
+          reports: ./src/TestResults/**/*.cobertura.xml
           targetdir: coveragereport
           reporttypes: MarkdownSummary;MarkdownAssembliesSummary;MarkdownSummaryGithub
-      - name: Upload coverage report artifact
+      - name: Subir el artefacto del reporte de cobertura
         uses: actions/upload-artifact@v4
         with:
           name: CoverageReport 
-          path: coveragereport 
-      - name: Publish coverage in build summary # 
-        run: cat coveragereport/SummaryGithub.md >> $GITHUB_STEP_SUMMARY 
+          path: coveragereport
+      - name: Publicar cobertura en el resumen de la ejecución
+        run: cat coveragereport/SummaryGithub.md >> $GITHUB_STEP_SUMMARY
         shell: bash
       - name: Instalar Scanner
         run: dotnet tool install -g dotnet-sonarscanner
@@ -69,7 +71,7 @@ jobs:
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
 
     steps:
-      - name: Descargar el artefacto desde el job de construccion
+      - name: Descargar el artefacto desde el job de construcción
         uses: actions/download-artifact@v4
         with:
           name: .net-app
