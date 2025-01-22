@@ -12,29 +12,24 @@ on:
 permissions:
   contents: read
 
-defaults:
-  run:
-    shell: bash  # Usar bash como shell predeterminado
-
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
+      
       - name: Configurar .NET Core
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
-      - name: Verificar e instalar herramientas de shell necesarias
+      - name: Instalar shell sh
         run: |
           sudo apt-get update
-          sudo apt-get install --yes dash
-          sudo ln -sf /bin/dash /bin/sh  # Crear enlace simbólico explícito para sh
-          echo "Shell básico configurado correctamente."
+          sudo apt-get install -y dash
+          echo "Shell básico instalado correctamente."
 
-      - name: Limpiar carpetas de compilación
+      - name: Limpiar carpetas bin y obj
         run: |
           find . -type d \( -name "bin" -o -name "obj" \) -exec rm -rf {} +
           echo "Carpetas bin y obj eliminadas correctamente."
@@ -58,7 +53,7 @@ jobs:
         run: |
           dotnet tool install --global dotnet-sonarscanner
           echo "$HOME/.dotnet/tools" >> $GITHUB_PATH
-
+        
       - name: Ejecutar escaneo de SonarCloud
         env:
           DOTNET_ROOT: /usr/share/dotnet
@@ -69,8 +64,7 @@ jobs:
             /k:"${{ secrets.SONAR_PROJECT }}" \
             /o:"${{ secrets.SONAR_ORG }}" \
             /d:sonar.login="${{ secrets.SONAR_TOKEN }}" \
-            /d:sonar.host.url="https://sonarcloud.io" \
-            /d:sonar.scanner.javaExePath="/usr/bin/java"
+            /d:sonar.host.url="https://sonarcloud.io"
           dotnet build
           dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
 
