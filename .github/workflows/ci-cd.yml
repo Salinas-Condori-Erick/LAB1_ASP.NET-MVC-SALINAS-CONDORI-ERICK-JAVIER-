@@ -54,12 +54,14 @@ jobs:
         shell: bash
         
       - name: Instalar Scanner de SonarCloud
-        run: dotnet tool install -g dotnet-sonarscanner
+        run: |
+          dotnet tool install --global dotnet-sonarscanner
+          echo "##[add-path]$HOME/.dotnet/tools" # Asegura que el escáner esté en el PATH
         
       - name: Ejecutar escaneo de SonarCloud
         env:
           DOTNET_ROOT: /usr/share/dotnet
-          PATH: /usr/share/dotnet:$PATH
+          PATH: /usr/share/dotnet:$PATH:$HOME/.dotnet/tools
         run: |
           cd src
           dotnet-sonarscanner begin \
