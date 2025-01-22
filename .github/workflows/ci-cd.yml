@@ -36,12 +36,12 @@ jobs:
         run: |
           # Lista los archivos generados en la carpeta TestResults
           echo "Listando archivos en TestResults:"
-          ls -R ./src/../TestResults || echo "No se encontraron archivos en TestResults"
+          ls -R ./src/TestResults || echo "No se encontraron archivos en TestResults"
       - name: ReportGenerator
         uses: danielpalme/ReportGenerator-GitHub-Action@5.3.7
         with:
           # Cambia la ruta para buscar archivos en TestResults
-          reports: ./TestResults/**/*.cobertura.xml
+          reports: ./TestResults/cobertura.xml
           targetdir: coveragereport
           reporttypes: MarkdownSummary;MarkdownAssembliesSummary;MarkdownSummaryGithub
       - name: Upload coverage report artifact
