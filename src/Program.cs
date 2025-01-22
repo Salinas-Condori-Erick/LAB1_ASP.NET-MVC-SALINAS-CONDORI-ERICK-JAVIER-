@@ -7,7 +7,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<ShortContext>(options =>
     options.UseInMemoryDatabase("ShortDB"));
-builder.Services.AddQuickGridEntityFrameworkAdapter();
+// builder.Services.AddQuickGridEntityFrameworkAdapter(); // Verifica si esta línea es necesaria o comenta si da errores.
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -23,12 +24,11 @@ app.UseRouting();
 
 app.UseAuthorization();
 
-app.MapStaticAssets();
+// app.MapStaticAssets(); // Línea comentada porque genera error.
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}")
-    .WithStaticAssets();
-
+    pattern: "{controller=Home}/{action=Index}/{id?}");
+// .WithStaticAssets(); // Línea comentada porque genera error.
 
 app.Run();

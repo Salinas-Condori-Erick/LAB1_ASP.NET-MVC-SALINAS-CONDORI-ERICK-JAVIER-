@@ -1,0 +1,51 @@
+{
+  "$schema": "http://json.schemastore.org/sarif-1.0.0",
+  "version": "1.0.0",
+  "runs": [
+    {
+      "tool": {
+        "name": "Compilador de Microsoft (R) Visual C#",
+        "version": "4.12.0.0",
+        "fileVersion": "4.12.0-3.24523.4 (f3348c2a)",
+        "semanticVersion": "4.12.0",
+        "language": "es-MX"
+      },
+      "results": [
+        {
+          "ruleId": "CS0579",
+          "level": "error",
+          "message": "Atributo 'global::System.Runtime.Versioning.TargetFrameworkAttribute' duplicado",
+          "locations": [
+            {
+              "resultFile": {
+                "uri": "file:///C:/Users/hp/LAB1_ASP.NET-MVC-SALINAS-CONDORI-ERICK-JAVIER-/src/obj/Debug/net8.0/.NETCoreApp,Version=v8.0.AssemblyAttributes.cs",
+                "region": {
+                  "startLine": 4,
+                  "startColumn": 12,
+                  "endLine": 4,
+                  "endColumn": 70
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "rules": {
+        "CS0579": {
+          "id": "CS0579",
+          "defaultLevel": "error",
+          "helpUri": "https://msdn.microsoft.com/query/roslyn.query?appId=roslyn&k=k(CS0579)",
+          "properties": {
+            "category": "Compiler",
+            "isEnabledByDefault": true,
+            "tags": [
+              "Compiler",
+              "Telemetry",
+              "NotConfigurable"
+            ]
+          }
+        }
+      }
+    }
+  ]
+}
