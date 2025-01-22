@@ -23,6 +23,10 @@ jobs:
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
+      # Verificar si el comando rm está disponible
+      - name: Verificar disponibilidad de comandos
+        run: which rm || echo "El comando rm no está disponible en este entorno."
+
       # Limpieza de carpetas bin y obj
       - name: Limpiar carpetas de compilación
         run: |
@@ -30,7 +34,7 @@ jobs:
           echo "Carpetas bin y obj eliminadas correctamente."
 
       # Limpieza adicional con dotnet clean
-      - name: Limpiar con dotnet clean
+      - name: Limpieza con dotnet clean
         run: |
           cd src
           dotnet clean
